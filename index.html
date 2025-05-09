@@ -3,96 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organigrama SENA CDM</title>
+    <title>Organigrama Completo SENA CDM</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
- 
-    
 </head>
 <body>
-   <div class="header">
-    <h1>Centro de Formación SENA CDM</h1>
-    <p>Organigrama con <span class="direct-relation">Relaciones Directas</span> y <span class="indirect-relation">Indirectas</span></p>
-</div>
+    <div class="header">
+        <h1>Centro de Formación SENA CDM</h1>
+        <p>Organigrama Completo con Todas las Áreas</p>
+        <div class="legend">
+            <div><span class="direct-relation"></span> Relación Directa</div>
+            <div><span class="indirect-relation"></span> Relación Indirecta</div>
+        </div>
+    </div>
     
-    <div class="org-chart">
-        <div class="tree">
+    <div class="org-container">
+        <svg id="connectors" width="100%" height="100%"></svg>
+        <div class="org-chart">
             <!-- Nodo principal -->
-            <div class="node main" onclick="showDetails('centro')">
+            <div class="node main" data-id="centro" onclick="showNodeInfo('centro')">
+                <img src="assets/icons/centro.svg" alt="Centro">
                 Centro de Formación SENA CDM
             </div>
             
-            <!-- Ramas principales -->
-            <div class="branches">
-                <!-- Subdirección -->
+            <!-- Nivel 1: Subdirecciones -->
+            <div class="level-1">
+                <!-- Subdirección Académica -->
                 <div class="branch">
-                    <div class="node" onclick="showDetails('subdireccion')">
-                        Subdirección
+                    <div class="node l1-node" data-id="subdireccion-academica" onclick="showNodeInfo('subdireccion-academica')">
+                        <img src="assets/icons/academica.svg" alt="Subdirección Académica">
+                        Subdirección Académica
                     </div>
-                    <div class="sub-branches">
-                        <div class="node sub-node" onclick="showDetails('comite-tecnico')">Comité Técnico</div>
-                        <div class="node sub-node" onclick="showDetails('mesa-sectorial')">Mesa Sectorial</div>
-                        <div class="node sub-node" onclick="showDetails('relaciones-corporativas')">Relaciones Corporativas</div>
+                    
+                    <!-- Nivel 2: Coordinaciones Académicas -->
+                    <div class="level-2">
+                        <div class="branch">
+                            <div class="node l2-node" data-id="coordinacion-tecnica" onclick="showNodeInfo('coordinacion-tecnica')">
+                                Coordinación Técnica
+                            </div>
+                            
+                            <!-- Nivel 3: Programas Técnicos -->
+                            <div class="level-3">
+                                <div class="node l3-node" data-id="programas-tecnicos" onclick="showNodeInfo('programas-tecnicos')">
+                                    Programas Técnicos
+                                </div>
+                                <div class="node l3-node" data-id="instructores" onclick="showNodeInfo('instructores')">
+                                    Instructores
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="branch">
+                            <div class="node l2-node" data-id="coordinacion-tecnologa" onclick="showNodeInfo('coordinacion-tecnologa')">
+                                Coordinación Tecnológica
+                            </div>
+                            
+                            <!-- Nivel 3: Áreas Tecnológicas -->
+                            <div class="level-3">
+                                <div class="node l3-node" data-id="tic" onclick="showNodeInfo('tic')">
+                                    TIC
+                                </div>
+                                <div class="node l3-node" data-id="laboratorios" onclick="showNodeInfo('laboratorios')">
+                                    Laboratorios
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Coordinación Académica -->
+                <!-- Subdirección Administrativa -->
                 <div class="branch">
-                    <div class="node" onclick="showDetails('coordinacion-academica')">
-                        Coordinación Académica
+                    <div class="node l1-node" data-id="subdireccion-administrativa" onclick="showNodeInfo('subdireccion-administrativa')">
+                        <img src="assets/icons/administrativa.svg" alt="Subdirección Administrativa">
+                        Subdirección Administrativa
                     </div>
-                    <div class="sub-branches">
-                        <div class="node sub-node" onclick="showDetails('instructores')">Gestión de Instructores</div>
-                        <div class="node sub-node" onclick="showDetails('ambientes')">Gestión de Ambientes</div>
-                        <div class="node sub-node" onclick="showDetails('formacion-titulada')">Formación Titulada</div>
-                        <div class="node sub-node" onclick="showDetails('formacion-complementaria')">Formación Complementaria</div>
+                    
+                    <!-- Nivel 2: Áreas Administrativas -->
+                    <div class="level-2">
+                        <div class="node l2-node" data-id="gestion-talento" onclick="showNodeInfo('gestion-talento')">
+                            Gestión de Talento Humano
+                        </div>
+                        <div class="node l2-node" data-id="gestion-financiera" onclick="showNodeInfo('gestion-financiera')">
+                            Gestión Financiera
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Gestión de Aprendices -->
+                <!-- Bienestar -->
                 <div class="branch">
-                    <div class="node" onclick="showDetails('gestion-aprendices')">
-                        Gestión de Aprendices
+                    <div class="node l1-node" data-id="bienestar" onclick="showNodeInfo('bienestar')">
+                        <img src="assets/icons/bienestar.svg" alt="Bienestar">
+                        Bienestar Aprendices
                     </div>
-                    <div class="sub-branches">
-                        <div class="node sub-node" onclick="showDetails('matriculas')">Matrículas y Registro</div>
-                        <div class="node sub-node" onclick="showDetails('seguimiento')">Seguimiento Académico</div>
-                        <div class="node sub-node" onclick="showDetails('bienestar')">Bienestar al Aprendiz</div>
-                        <div class="node sub-node" onclick="showDetails('agencia-empleo')">Agencia Pública de Empleo</div>
-                    </div>
-                </div>
-                
-                <!-- Apoyo Administrativo -->
-                <div class="branch">
-                    <div class="node" onclick="showDetails('apoyo-administrativo')">
-                        Apoyo Administrativo
-                    </div>
-                    <div class="sub-branches">
-                        <div class="node sub-node" onclick="showDetails('recursos-fisicos')">Recursos Físicos</div>
-                        <div class="node sub-node" onclick="showDetails('recursos-financieros')">Recursos Financieros</div>
-                        <div class="node sub-node" onclick="showDetails('tic')">Tecnologías de la Información</div>
+                    
+                    <!-- Nivel 2: Áreas de Bienestar -->
+                    <div class="level-2">
+                        <div class="node l2-node" data-id="psicologia" onclick="showNodeInfo('psicologia')">
+                            Psicología
+                        </div>
+                        <div class="node l2-node" data-id="deportes" onclick="showNodeInfo('deportes')">
+                            Deportes y Cultura
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Avatar -->
+
+    <div id="relation-tooltip" class="tooltip"></div>
+
+    <!-- Avatar Guía y Modal (Agregar al final del body) -->
+<div id="avatar-modal" class="avatar-modal">
     <div class="avatar-container">
-        <div class="avatar" onclick="toggleAvatarModal()">
-            <img src="assets/avatars/avatar_v1-fdn.png" alt="Guía SENA">
+        <img id="avatar-image" src="assets/avatars/guia.png" alt="Guía SENA">
+    </div>
+    <div class="avatar-message">
+        <p id="avatar-text">Hola, soy tu guía. Haz clic en cualquier área para conocer más.</p>
+        <button id="voice-btn" class="voice-btn">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+</div>
+
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="modal-title">Título</h2>
+        <div id="modal-content">
+            Contenido descriptivo aquí...
         </div>
     </div>
-    
-    <!-- Modal del Avatar -->
-    <div class="modal" id="avatarModal"></div>
-    
-    <!-- Modal de Detalles -->
-    <div class="modal" id="detailsModal"></div>
+</div>
     
     <script src="script.js"></script>
-
-
-    <svg id="connectors" width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 0;"></svg>
 </body>
 </html>

@@ -1,404 +1,232 @@
-// Datos actualizados del organigrama
-const orgData = {
-    centro: {
-        title: "Centro de Formación SENA CDM",
-        content: "Entidad encargada de la formación profesional integral. Coordina todas las áreas y procesos formativos.",
-        video: "",
-        audio: ""
-    },
-    subdireccion: {
-        title: "Subdirección",
-        content: "Responsable de la dirección estratégica del centro. Supervisa todas las coordinaciones.",
-        video: "",
-        audio: ""
-    },
-    'comite-tecnico': {
-        title: "Comité Técnico",
-        content: "Analiza y recomienda sobre aspectos técnicos de los programas de formación.",
-        video: "",
-        audio: ""
-    },
-    'mesa-sectorial': {
-        title: "Mesa Sectorial",
-        content: "Espacio de concertación con el sector productivo para alinear la formación.",
-        video: "",
-        audio: ""
-    },
-    'coordinacion-academica': {
-        title: "Coordinación Académica",
-        content: "Gestiona todos los procesos formativos, instructores y ambientes de aprendizaje.",
-        video: "",
-        audio: ""
-    },
-    instructores: {
-        title: "Gestión de Instructores",
-        content: "Selección, vinculación (Res. 0642), desarrollo y evaluación del personal docente.",
-        video: "",
-        audio: ""
-    },
-    ambientes: {
-        title: "Gestión de Ambientes",
-        content: "Administración de aulas, talleres, laboratorios y plataformas virtuales.",
-        video: "",
-        audio: ""
-    },
-    'formacion-titulada': {
-        title: "Formación Titulada",
-        content: "Programas técnicos y tecnológicos con certificación oficial del SENA.",
-        video: "",
-        audio: ""
-    },
-    'gestion-aprendices': {
-        title: "Gestión de Aprendices",
-        content: "Proceso integral desde matrícula hasta seguimiento académico.",
-        video: "",
-        audio: ""
-    },
-    bienestar: {
-        title: "Bienestar al Aprendiz",
-        content: "Servicios de psicorientación, salud, actividades deportivas y culturales.",
-        video: "",
-        audio: ""
-    },
-    'apoyo-administrativo': {
-        title: "Apoyo Administrativo",
-        content: "Gestión de recursos físicos, financieros y tecnológicos del centro.",
-        video: "",
-        audio: ""
-    },
-    'recursos-fisicos': {
-        title: "Recursos Físicos",
-        content: "Mantenimiento de infraestructura y servicios generales.",
-        video: "",
-        audio: ""
-    },
-    tic: {
-        title: "Tecnologías de la Información",
-        content: "Soporte técnico, plataformas virtuales e infraestructura tecnológica.",
-        video: "",
-        audio: ""
-    }
-};
 
-// Avatar y roles actualizados
-const roleInfo = {
-    aprendiz: {
-        title: "Guía para Aprendices",
-        content: "Como aprendiz, puedes navegar para conocer:<ul><li>Procesos de formación</li><li>Servicios de bienestar</li><li>Oportunidades laborales</li><li>Ambientes de aprendizaje</li></ul>",
-        voiceMessage: "Aprendiz, aquí encontrarás información sobre tu formación, bienestar y oportunidades laborales."
-    },
-    instructor: {
-        title: "Guía para Instructores",
-        content: "Recursos para docentes:<ul><li>Normativa de instructores</li><li>Acceso a ambientes</li><li>Desarrollo curricular</li><li>Evaluación de aprendices</li></ul>",
-        voiceMessage: "Instructor, este espacio le muestra recursos para su labor docente y gestión de ambientes."
-    },
-    administrativo: {
-        title: "Guía para Administrativos",
-        content: "Procesos clave:<ul><li>Gestión de recursos</li><li>Contratación</li><li>Mantenimiento</li><li>Soporte tecnológico</li></ul>",
-        voiceMessage: "Personal administrativo, aquí encontrará los procesos de gestión de recursos y soporte."
-    }
-};
-
-// Avatares disponibles
-const avatars = {
-    default: { image: 'avatar_v1-fdn.png', name: 'Guía' },
-    aprendiz: { image: '', name: 'Aprendiz' },
-    instructor: { image: '', name: 'Instructor' },
-    administrativo: { image: '', name: 'Administrativo' }
-};
-
-// Variables globales
-let currentRole = null;
-let currentAvatar = 'default';
-let speechSynthesis = window.speechSynthesis || null;
-let currentUtterance = null;
-let isSpeaking = false;
-
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
-    // Efecto de carga
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    }, 100);
-    
-    // Dibujar conexiones
-    setTimeout(drawConnections, 500);
-    
-    // Configurar avatar por defecto
-    setAvatar(currentAvatar);
-});
-
-// === Datos de Relaciones ===
-const relations = {
+// Datos de relaciones completas
+const relationsData = {
     direct: [
-        { 
-            from: "coordinacion-academica", 
-            to: "instructores",
-            label: "Asignación de instructores a programas" 
-        }
+        { from: "centro", to: "subdireccion-academica", label: "Línea de mando directa" },
+        { from: "centro", to: "subdireccion-administrativa", label: "Línea de mando directa" },
+        { from: "subdireccion-academica", to: "coordinacion-tecnica", label: "Supervisión académica" },
+        { from: "subdireccion-academica", to: "coordinacion-tecnologa", label: "Supervisión tecnológica" },
+        { from: "coordinacion-tecnica", to: "programas-tecnicos", label: "Gestión de programas" },
+        { from: "coordinacion-tecnica", to: "instructores", label: "Asignación de instructores" },
+        { from: "coordinacion-tecnologa", to: "tic", label: "Gestión TIC" },
+        { from: "coordinacion-tecnologa", to: "laboratorios", label: "Gestión laboratorios" },
+        { from: "subdireccion-administrativa", to: "gestion-talento", label: "Supervisión RH" },
+        { from: "subdireccion-administrativa", to: "gestion-financiera", label: "Supervisión financiera" }
     ],
     indirect: [
-        { 
-            from: "bienestar", 
-            to: "instructores",
-            label: "Reporte de situaciones de aprendices" 
-        }
+        { from: "instructores", to: "gestion-talento", label: "Contratación y nómina" },
+        { from: "programas-tecnicos", to: "gestion-financiera", label: "Presupuesto programas" },
+        { from: "tic", to: "programas-tecnicos", label: "Soporte tecnológico" },
+        { from: "instructores", to: "psicologia", label: "Reporte situaciones" },
+        { from: "laboratorios", to: "gestion-financiera", label: "Mantenimiento equipos" }
     ]
 };
 
-// === Dibujar conexiones ===
+// Inicialización
+document.addEventListener('DOMContentLoaded', function() {
+    drawConnections();
+    setupHoverEffects();
+    window.addEventListener('resize', debounce(drawConnections, 200));
+});
+
+// Dibujar conexiones con posición corregida
 function drawConnections() {
     const svg = document.getElementById('connectors');
+    svg.innerHTML = '';
     
-    // Dibujar relaciones
-    relations.direct.forEach(rel => drawLine(rel.from, rel.to, 'direct', rel.label));
-relations.indirect.forEach(rel => drawLine(rel.from, rel.to, 'indirect', rel.label));
+    // Ajustar tamaño del SVG
+    const orgContainer = document.querySelector('.org-container');
+    svg.setAttribute('width', orgContainer.offsetWidth);
+    svg.setAttribute('height', orgContainer.offsetHeight);
+    
+    // Dibujar todas las relaciones
+    relationsData.direct.forEach(rel => drawConnection(rel, 'direct'));
+    relationsData.indirect.forEach(rel => drawConnection(rel, 'indirect'));
 }
 
-// Modifica la función drawLine así:
-// Reemplaza la función drawLine por esta versión corregida
-function drawLine(fromId, toId, type, label) {
-    const from = document.querySelector(`[data-id="${fromId}"]`);
-    const to = document.querySelector(`[data-id="${toId}"]`);
-    if (!from || !to) return;
-
+// Función mejorada para dibujar conexiones
+function drawConnection(rel, type) {
+    const { from, to, label } = rel;
+    const fromEl = document.querySelector(`[data-id="${from}"]`);
+    const toEl = document.querySelector(`[data-id="${to}"]`);
+    
+    if (!fromEl || !toEl) return;
+    
     const svg = document.getElementById('connectors');
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     
-    // Calcular posiciones
-    const fromRect = from.getBoundingClientRect();
-    const toRect = to.getBoundingClientRect();
+    // Calcular posiciones relativas al contenedor SVG
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
     const svgRect = svg.getBoundingClientRect();
     
-    const x1 = fromRect.left + fromRect.width/2 - svgRect.left;
-    const y1 = fromRect.top + fromRect.height - svgRect.top;
-    const x2 = toRect.left + toRect.width/2 - svgRect.left;
-    const y2 = toRect.top - svgRect.top;
+    const startX = fromRect.left + fromRect.width/2 - svgRect.left;
+    const startY = fromRect.top + fromRect.height - svgRect.top;
+    const endX = toRect.left + toRect.width/2 - svgRect.left;
+    const endY = toRect.top - svgRect.top;
     
-    line.setAttribute("x1", x1);
-    line.setAttribute("y1", y1);
-    line.setAttribute("x2", x2);
-    line.setAttribute("y2", y2);
+    // Configurar línea
+    line.setAttribute("x1", startX);
+    line.setAttribute("y1", startY);
+    line.setAttribute("x2", endX);
+    line.setAttribute("y2", endY);
     line.classList.add('relation-line', `${type}-relation-line`);
     
-    // Crear tooltip global (solo uno)
-    let tooltip = document.getElementById('relation-tooltip');
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'relation-tooltip';
-        tooltip.className = 'tooltip';
-        document.body.appendChild(tooltip);
-    }
+    // Tooltip
+    const tooltip = document.getElementById('relation-tooltip');
     
-    // Configurar eventos
     line.addEventListener('mouseenter', (e) => {
-        const x = (e.clientX);
-        const y = (e.clientY);
-        tooltip.textContent = label || `${fromId} → ${toId}`;
+        const x = e.clientX;
+        const y = e.clientY;
+        tooltip.textContent = label || `${from} → ${to}`;
         tooltip.style.left = `${x}px`;
-        tooltip.style.top = `${y - 30}px`;
+        tooltip.style.top = `${y - 10}px`;
         tooltip.classList.add('tooltip-visible');
+        line.style.strokeWidth = '4px';
     });
     
     line.addEventListener('mouseleave', () => {
         tooltip.classList.remove('tooltip-visible');
+        line.style.strokeWidth = type === 'direct' ? '3px' : '2px';
     });
     
     line.addEventListener('mousemove', (e) => {
         tooltip.style.left = `${e.clientX}px`;
-        tooltip.style.top = `${e.clientY - 30}px`;
+        tooltip.style.top = `${e.clientY - 10}px`;
     });
     
     svg.appendChild(line);
 }
 
-
-
-// Y en drawConnections usa:
-relations.direct.forEach(rel => drawLine(rel.from, rel.to, 'direct', rel.label));
-relations.indirect.forEach(rel => drawLine(rel.from, rel.to, 'indirect', rel.label));
-// Y en drawConnections usa:
-relations.direct.forEach(rel => drawLine(rel.from, rel.to, 'direct', rel.label));
-relations.indirect.forEach(rel => drawLine(rel.from, rel.to, 'indirect', rel.label));
-// Inicializar al cargar
-document.addEventListener('DOMContentLoaded', drawConnections);
-
-// Función para configurar el avatar
-function setAvatar(avatarType) {
-    currentAvatar = avatarType;
-    const avatar = document.querySelector('.avatar');
-    const avatarData = avatars[avatarType] || avatars.default;
-    
-    // Crear imagen si no existe
-    if (!avatar.querySelector('img')) {
-        const img = document.createElement('img');
-        img.alt = avatarData.name;
-        avatar.innerHTML = '';
-        avatar.appendChild(img);
-    }
-    
-    // Actualizar imagen
-    const img = avatar.querySelector('img');
-    img.src = `assets/avatars/${avatarData.image}`;
-    img.title = avatarData.name;
-}
-
-// Función para reproducir mensaje de voz
-function speakMessage(message) {
-    // Detener cualquier mensaje en curso
-    if (isSpeaking) {
-        speechSynthesis.cancel();
-        isSpeaking = false;
-        document.querySelectorAll('.voice-button').forEach(btn => {
-            btn.classList.remove('playing');
-        });
-        return;
-    }
-    
-    if (speechSynthesis && message) {
-        currentUtterance = new SpeechSynthesisUtterance(message);
-        currentUtterance.lang = 'es-ES';
-        currentUtterance.rate = 0.9;
+// Efectos hover
+function setupHoverEffects() {
+    document.querySelectorAll('.node').forEach(node => {
+        const nodeId = node.dataset.id;
         
-        document.querySelectorAll('.voice-button').forEach(btn => {
-            btn.classList.add('playing');
+        node.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.relation-line').forEach(line => {
+                if (line.dataset.from === nodeId || line.dataset.to === nodeId) {
+                    line.style.opacity = '1';
+                    line.style.strokeWidth = '4px';
+                } else {
+                    line.style.opacity = '0.3';
+                }
+            });
         });
         
-        currentUtterance.onend = function() {
-            isSpeaking = false;
-            document.querySelectorAll('.voice-button').forEach(btn => {
-                btn.classList.remove('playing');
+        node.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.relation-line').forEach(line => {
+                line.style.opacity = '1';
+                const type = line.classList.contains('direct-relation-line') ? '3px' : '2px';
+                line.style.strokeWidth = type;
             });
-        };
-        
-        currentUtterance.onerror = function() {
-            isSpeaking = false;
-            document.querySelectorAll('.voice-button').forEach(btn => {
-                btn.classList.remove('playing');
-            });
-        };
-        
-        speechSynthesis.speak(currentUtterance);
-        isSpeaking = true;
-    }
+        });
+    });
 }
 
-// Mostrar detalles del nodo
+// Función debounce para redimensionamiento
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// Mostrar detalles
 function showDetails(nodeId) {
-    const data = orgData[nodeId];
-    const modalContent = `
-        <div class="modal-content">
-            <span class="close-modal" onclick="toggleDetailsModal()">&times;</span>
-            <h2>${data.title}</h2>
-            <div class="detail-content">
-                <p>${data.content}</p>
-                ${data.video ? `<video src="${data.video}" controls style="width:100%; margin-top:15px;"></video>` : ''}
-                ${data.audio ? `<audio src="${data.audio}" controls style="width:100%; margin-top:15px;"></audio>` : ''}
-                <button class="voice-button" onclick="speakMessage('${escapeSingleQuotes(data.title)}. ${escapeSingleQuotes(data.content)}')">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <p><small>Haz clic para escuchar esta información</small></p>
-            </div>
-        </div>
+    console.log(`Mostrando detalles de: ${nodeId}`);
+    // Implementar lógica de modal según necesidades
+}
+
+// ===== [INICIO] Sistema de Avatar Guía ===== //
+// [Código completo de relaciones...]
+
+// Sistema de Avatar (completo)
+const nodeData = {
+    centro: {
+        title: "Centro de Formación SENA CDM",
+        description: "Unidad encargada de la formación profesional integral...",
+        avatarMessage: "Este es nuestro centro de formación...",
+        functions: ["Función 1", "Función 2"]
+    },
+    "subdireccion-academica": {
+        title: "Subdirección Académica",
+        description: "Gestiona los procesos formativos...",
+        avatarMessage: "La subdirección académica supervisa los programas...",
+        functions: ["Supervisar programas", "Evaluar instructores"]
+    }
+    // Completa con TODOS los nodos
+};
+
+let currentSpeech = null;
+let isSpeaking = false;
+
+// Inicialización del avatar
+document.querySelector('.close-modal')?.addEventListener('click', closeModal);
+document.getElementById('voice-btn')?.addEventListener('click', toggleSpeech);
+
+function showNodeInfo(nodeId) {
+    const data = nodeData[nodeId] || { 
+        title: nodeId, 
+        description: "Descripción no disponible.",
+        avatarMessage: "Información en desarrollo.",
+        functions: ["Funciones no especificadas"]
+    };
+    
+    document.getElementById('modal-title').textContent = data.title;
+    document.getElementById('modal-content').innerHTML = `
+        <p>${data.description}</p>
+        <h3>Funciones principales:</h3>
+        <ul>${data.functions.map(func => `<li>${func}</li>`).join('')}</ul>
     `;
     
-    document.getElementById('detailsModal').innerHTML = modalContent;
-    toggleDetailsModal();
+    document.getElementById('avatar-text').textContent = data.avatarMessage;
+    document.getElementById('avatar-modal').classList.add('visible');
+    document.getElementById('info-modal').style.display = 'flex';
+    currentSpeech = `${data.title}. ${data.description}. Funciones: ${data.functions.join(', ')}`;
 }
 
-// Modal de avatar
-function toggleAvatarModal() {
-    const modal = document.getElementById('avatarModal');
-    
-    if (modal.style.display === 'flex') {
-        modal.style.display = 'none';
+// [Funciones de voz (toggleSpeech, startSpeech, etc.)...]
+// ===== [FIN] Sistema de Avatar Guía ===== //
+
+function toggleSpeech() {
+    if (isSpeaking) {
+        stopSpeech();
     } else {
-        const modalContent = `
-            <div class="modal-content">
-                <span class="close-modal" onclick="toggleAvatarModal()">&times;</span>
-                <h2>Personaliza tu Guía</h2>
-                
-                <h3>Selecciona tu rol:</h3>
-                <div class="avatar-options">
-                    <button onclick="setAvatarRole('aprendiz')">Aprendiz</button>
-                    <button onclick="setAvatarRole('instructor')">Instructor</button>
-                    <button onclick="setAvatarRole('administrativo')">Administrativo</button>
-                </div>
-                
-                <h3>Elige tu avatar:</h3>
-                <div class="avatar-selector">
-                    ${Object.entries(avatars).map(([key, avatar]) => `
-                        <div class="avatar-option ${key === currentAvatar ? 'selected' : ''}" onclick="setAvatar('${key}')">
-                            <img src="assets/avatars/${avatar.image}" alt="${avatar.name}" title="${avatar.name}">
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div id="roleInfo" class="role-info">
-                    ${currentRole ? `
-                        <h3>${roleInfo[currentRole].title}</h3>
-                        ${roleInfo[currentRole].content}
-                        <button class="voice-button" onclick="speakMessage('${escapeSingleQuotes(roleInfo[currentRole].voiceMessage)}')">
-                            <i class="fas fa-volume-up"></i> Escuchar guía
-                        </button>
-                    ` : '<p>Selecciona un rol para ver información específica</p>'}
-                </div>
-            </div>
-        `;
-        
-        modal.innerHTML = modalContent;
-        modal.style.display = 'flex';
+        startSpeech();
     }
 }
 
-// Configurar rol del avatar
-function setAvatarRole(role) {
-    currentRole = role;
-    const roleInfoElement = document.getElementById('roleInfo');
-    if (roleInfoElement) {
-        roleInfoElement.innerHTML = `
-            <h3>${roleInfo[role].title}</h3>
-            ${roleInfo[role].content}
-            <button class="voice-button" onclick="speakMessage('${escapeSingleQuotes(roleInfo[role].voiceMessage)}')">
-                <i class="fas fa-volume-up"></i> Escuchar guía
-            </button>
-        `;
-    }
+function startSpeech() {
+    if (!currentSpeech || !window.speechSynthesis) return;
+    stopSpeech(); // Detener cualquier mensaje previo
     
-    // Cambiar avatar según rol si no se ha personalizado
-    if (currentAvatar === 'default') {
-        setAvatar(role);
-    }
-}
-
-// Mostrar/ocultar modal de detalles
-function toggleDetailsModal() {
-    const modal = document.getElementById('detailsModal');
-    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-}
-
-// Escapar comillas simples para JS
-function escapeSingleQuotes(str) {
-    return str.replace(/'/g, "\\'");
-}
-
-// Cerrar modales al hacer clic fuera
-window.onclick = function(event) {
-    const detailsModal = document.getElementById('detailsModal');
-    const avatarModal = document.getElementById('avatarModal');
+    const utterance = new SpeechSynthesisUtterance(currentSpeech);
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.9;
     
-    if (event.target === detailsModal) {
-        toggleDetailsModal();
-    }
+    utterance.onend = () => {
+        document.getElementById('voice-btn').classList.remove('playing');
+        isSpeaking = false;
+    };
     
-    if (event.target === avatarModal) {
-        toggleAvatarModal();
-    }
+    document.getElementById('voice-btn').classList.add('playing');
+    speechSynthesis.speak(utterance);
+    isSpeaking = true;
 }
 
-// Redibujar conexiones al cambiar tamaño de ventana
-window.addEventListener('resize', function() {
-    drawConnections();
-});
+function stopSpeech() {
+    if (window.speechSynthesis) {
+        speechSynthesis.cancel();
+    }
+    document.getElementById('voice-btn').classList.remove('playing');
+    isSpeaking = false;
+}
+
+function closeModal() {
+    document.getElementById('info-modal').style.display = 'none';
+    document.getElementById('avatar-modal').classList.remove('visible');
+    stopSpeech();
+}
