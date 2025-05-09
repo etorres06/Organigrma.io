@@ -1,0 +1,16 @@
+graph TD
+    Subdirección -->|Supervisa| CoordinaciónAcadémica
+    CoordinaciónAcadémica --> FormaciónTitulada
+    CoordinaciónAcadémica --> InclusiónSocial
+    CoordinaciónAcadémica --> FormaciónComplementaria
+    
+    FormaciónTitulada -->|Requiere| ApoyoAdministrativo[Mantenimiento/TI]
+    InclusiónSocial -->|Colabora| GestiónEducativa[Bienestar/Empleo]
+    FormaciónComplementaria -->|Usa| GestiónEducativa[Plataformas Virtuales]
+
+    graph LR
+    Instructores -->|Enseñan| Aprendices
+    Ambientes -->|Albergan| Aprendices
+    Ambientes -->|Usados por| Instructores
+    Bienestar -->|Atiende| Aprendices
+    Bienestar -->|Reporta| Subdirección

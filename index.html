@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organigrama SENA CDM</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+ 
+    
+</head>
+<body>
+   <div class="header">
+    <h1>Centro de Formación SENA CDM</h1>
+    <p>Organigrama con <span class="direct-relation">Relaciones Directas</span> y <span class="indirect-relation">Indirectas</span></p>
+</div>
+    
+    <div class="org-chart">
+        <div class="tree">
+            <!-- Nodo principal -->
+            <div class="node main" onclick="showDetails('centro')">
+                Centro de Formación SENA CDM
+            </div>
+            
+            <!-- Ramas principales -->
+            <div class="branches">
+                <!-- Subdirección -->
+                <div class="branch">
+                    <div class="node" onclick="showDetails('subdireccion')">
+                        Subdirección
+                    </div>
+                    <div class="sub-branches">
+                        <div class="node sub-node" onclick="showDetails('comite-tecnico')">Comité Técnico</div>
+                        <div class="node sub-node" onclick="showDetails('mesa-sectorial')">Mesa Sectorial</div>
+                        <div class="node sub-node" onclick="showDetails('relaciones-corporativas')">Relaciones Corporativas</div>
+                    </div>
+                </div>
+                
+                <!-- Coordinación Académica -->
+                <div class="branch">
+                    <div class="node" onclick="showDetails('coordinacion-academica')">
+                        Coordinación Académica
+                    </div>
+                    <div class="sub-branches">
+                        <div class="node sub-node" onclick="showDetails('instructores')">Gestión de Instructores</div>
+                        <div class="node sub-node" onclick="showDetails('ambientes')">Gestión de Ambientes</div>
+                        <div class="node sub-node" onclick="showDetails('formacion-titulada')">Formación Titulada</div>
+                        <div class="node sub-node" onclick="showDetails('formacion-complementaria')">Formación Complementaria</div>
+                    </div>
+                </div>
+                
+                <!-- Gestión de Aprendices -->
+                <div class="branch">
+                    <div class="node" onclick="showDetails('gestion-aprendices')">
+                        Gestión de Aprendices
+                    </div>
+                    <div class="sub-branches">
+                        <div class="node sub-node" onclick="showDetails('matriculas')">Matrículas y Registro</div>
+                        <div class="node sub-node" onclick="showDetails('seguimiento')">Seguimiento Académico</div>
+                        <div class="node sub-node" onclick="showDetails('bienestar')">Bienestar al Aprendiz</div>
+                        <div class="node sub-node" onclick="showDetails('agencia-empleo')">Agencia Pública de Empleo</div>
+                    </div>
+                </div>
+                
+                <!-- Apoyo Administrativo -->
+                <div class="branch">
+                    <div class="node" onclick="showDetails('apoyo-administrativo')">
+                        Apoyo Administrativo
+                    </div>
+                    <div class="sub-branches">
+                        <div class="node sub-node" onclick="showDetails('recursos-fisicos')">Recursos Físicos</div>
+                        <div class="node sub-node" onclick="showDetails('recursos-financieros')">Recursos Financieros</div>
+                        <div class="node sub-node" onclick="showDetails('tic')">Tecnologías de la Información</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Avatar -->
+    <div class="avatar-container">
+        <div class="avatar" onclick="toggleAvatarModal()">
+            <img src="assets/avatars/avatar_v1-fdn.png" alt="Guía SENA">
+        </div>
+    </div>
+    
+    <!-- Modal del Avatar -->
+    <div class="modal" id="avatarModal"></div>
+    
+    <!-- Modal de Detalles -->
+    <div class="modal" id="detailsModal"></div>
+    
+    <script src="script.js"></script>
+
+
+    <svg id="connectors" width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 0;"></svg>
+</body>
+</html>
